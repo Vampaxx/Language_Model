@@ -91,9 +91,11 @@ class Block(nn.Module):
         head_size                   = n_emd // n_heads 
         self.self_attention_head    = MultiHeadAttention(n_heads,head_size)
         self.ffwd                   = FeedForward(n_emd)
+        self.ln1                    = nn.LayerNorm(n_emd)
+        self.ln2                    = nn.LayerNorm(n_emd)
     def forward(self,x):
-        x   = self.self_attention_head(x)
-        x   = self.ffwd(x)
+        x   = self.self_attention_head(self.ln1(x))
+        x   = self.ffwd(self.ln2(x))
         return x 
 ## --------------Language model ---------------------------------## 
 
